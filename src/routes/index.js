@@ -6,7 +6,7 @@ const webpush = require("../webpush");
 router.post("/subscription", async (req, res) => {
   const pushSubscripton = req.body;
   const connection = mysql.createPool({
-    host: "http://198.27.127.208",
+    host: "198.27.127.208",
     user: "extremao_notificaciones-web",
     password: "]nHh&u+Um[h_",
     database: "extremao_notificaciones-web",
@@ -44,7 +44,7 @@ router.post("/subscription", async (req, res) => {
 router.post("/new-message", async (req, res) => {
   const data = req.body;
   const connection = mysql.createPool({
-    host: "http://198.27.127.208",
+    host: "198.27.127.208",
     user: "extremao_notificaciones-web",
     password: "]nHh&u+Um[h_",
     database: "extremao_notificaciones-web",
@@ -54,13 +54,15 @@ router.post("/new-message", async (req, res) => {
   });
 
    connection.execute(
-    'select * from notification_suscribe where project = ? and id_user = ? ',[data.project, data.idUser],
+    'select * from notification_suscribe where project = ? and id_user = ?',[data.project, data.idUser],
     function(err, results,) {
        if(results.length > 0){
         const payload = JSON.stringify({ title: data.title, message: data.message });
         console.log(payload);
-        res.status(200).json();
-        webpush.sendNotification( JSON.parse(results[0].data), payload);
+        res.status(200).json(payload);
+        results.map((value) => {
+          webpush.sendNotification(JSON.parse(value.data), payload);
+        });
        } else {
         res.status(400).json({message: "No existe usuario para enviar notificacion"});
        }
