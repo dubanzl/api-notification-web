@@ -59,7 +59,7 @@ router.post("/new-message", async (req, res) => {
           rows.map((value) =>  {
             webpush.sendNotification(JSON.parse(value.data), JSON.stringify({ title: data.title, message: data.message }))
             .catch(function (ex) {
-             await connection.execute('delete from notification_suscribe where project = ? and id_user = ? and p256dh = ? and auth = ?', [value.project, value.idUser, value.p256dh, value.auth ]);
+              connection.execute('delete from notification_suscribe where project = ? and id_user = ? and p256dh = ? and auth = ?', [value.project, value.idUser, value.p256dh, value.auth ]);
           }
         );
       });
