@@ -59,6 +59,8 @@ router.post("/new-message", async (req, res) => {
           rows.map((value) =>  {
             webpush.sendNotification(JSON.parse(value.data), JSON.stringify({ title: data.title, message: data.message }))
             .catch(function (ex) {
+              console.log('Notification', value);
+              console.log('Notification error',ex)
               connection.execute('delete from notification_suscribe where project = ? and id_user = ? and p256dh = ? and auth = ?', [value.project, value.idUser, value.p256dh, value.auth ]);
           }
         );
