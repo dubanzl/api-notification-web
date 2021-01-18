@@ -56,6 +56,7 @@ router.post("/new-message", async (req, res) => {
   
     const [rows, fields] = await connection.execute('select * from notification_suscribe where project = ? and id_user = ?', [data.project, data.idUser]);
       if(rows.length > 0){
+          res.status(200).json({ title: data.title, message: data.message });
           rows.map((value) =>  {
             webpush.sendNotification(JSON.parse(value.data), JSON.stringify({ title: data.title, message: data.message }))
             .catch(function (ex) {
@@ -65,7 +66,6 @@ router.post("/new-message", async (req, res) => {
           }
         );
       });
-      res.status(200).json(payload);
      } else {
       res.status(400).json({message: "No existe usuario para enviar notificacion"});
      }
