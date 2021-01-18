@@ -61,7 +61,7 @@ router.post("/new-message", async (req, res) => {
             .catch(function (ex) {
               console.log('Notification', value);
               console.log('Notification error',ex)
-              connection.execute('delete from notification_suscribe where project = ? and id_user = ? and p256dh = ? and auth = ?', [value.project, value.idUser, value.p256dh, value.auth ]);
+              connection.execute('delete from notification_suscribe where project = ? and id_user = ? and p256dh = ? and auth = ?', [value.project, value.id_user, value.p256dh, value.auth ]);
           }
         );
       });
