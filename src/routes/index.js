@@ -56,17 +56,10 @@ router.post("/new-message", async (req, res) => {
   
     const [rows, fields] = await connection.execute('select * from notification_suscribe where project = ? and id_user = ?', [data.project, data.idUser]);
       if(rows.length > 0){
-          rows.map( async (value) =>  {
-            webpush.sendNotification(JSON.parse(value.data), JSON.stringify({ title: data.title, message: data.message })).then(
-              function (data) {
-                  return callback(null, data);
-              },
-              function (err) {
-                  return callback(err, null);
-              }
-          )
-          .catch(function (ex) {
-              return callback(new Error(ex), null);
+          rows.map((value) =>  {
+            webpush.sendNotification(JSON.parse(value.data), JSON.stringify({ title: data.title, message: data.message }))
+            .catch(function (ex) {
+            return callback(new Error(ex), null);
           }
         );
       });
